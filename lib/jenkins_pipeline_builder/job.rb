@@ -20,12 +20,19 @@ module JenkinsPipelineBuilder
       xml = payload
       return local_output(xml) if JenkinsPipelineBuilder.debug || JenkinsPipelineBuilder.file_mode
 
+      # TODO: JenkinsPipelineBuilder.client.job.create_or_update(name, xml)
       if JenkinsPipelineBuilder.client.job.exists?(name)
         JenkinsPipelineBuilder.client.job.update(name, xml)
       else
         JenkinsPipelineBuilder.client.job.create(name, xml)
       end
       [true, nil]
+    end
+
+    # must be called after updating the job's config
+    def create_promotion_process process_name, config
+      # TODO
+      JenkinsPipelineBuilder.client.job.init_promotion_process(process_name, config)
     end
 
     def to_xml
@@ -54,7 +61,7 @@ module JenkinsPipelineBuilder
     end
 
     def job_methods
-      %w(job_dsl multi_project build_flow free_style pull_request_generator)
+      %w(job_dsl multi_project build_flow free_style pull_request_generator promotion)
     end
 
     def local_output(xml)

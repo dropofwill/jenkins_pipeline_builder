@@ -6,9 +6,9 @@
   block_when_upstream_building: false # unless defined? false
   icon: 'Gold star' # || 'Silver star'
   conditions:
-    - type: manual 
+    - type: manual
       users: 'wpaul' # || ''
-    - type: self_promotion 
+    - type: self_promotion
       even_if_unstable: true # unless defined? false
     - type: parameterized_self_promotion
       parameter_name: 'SOME_ENV_VAR'
@@ -17,7 +17,7 @@
     - type: downstream_pass
       jobs: '{{Example}}-Commit'
       even_if_unstable: true # unless defined? false
-    - type: upstream_promotion 
+    - type: upstream_promotion
       promotion_name: '01. Staging Promotion'
   build_steps:
     - projects: '{{name}}-Release'

@@ -26,3 +26,5 @@
           build_step_failure_threshold: failure # 'FAILURE' # %s(never FAILURE UNSTABLE SUCCESS)
           failure_threshold: failure # || # %s(never FAILURE UNSTABLE SUCCESS)
           unstable_threshold: unstable # || # %s(never FAILURE UNSTABLE SUCCESS)
+    - keep_builds_forever:
+        value: true

@@ -52,20 +52,109 @@ describe 'build_steps' do
   context 'triggered_jobs' do
     before :each do
       allow(JenkinsPipelineBuilder.client).to receive(:plugin).and_return double(
-        list_installed: { 'promoted_builds' => '2.31' }
+        list_installed: { 'promoted-builds' => '2.31', 'parameterized-trigger' => '20.0' }
       )
     end
 
-    it 'generates a configuration' do
-      params = { build_steps: {
-        triggered_job: { name: 'ReleaseBuild' } } }
+    it 'generates a configuration with standard defaults' do
+      params = { build_steps: { triggered_job:
+               { name: 'ReleaseBuild' } } }
+
+      JenkinsPipelineBuilder.registry.traverse_registry_path('job', params, @n_xml)
+
+      xml_from_jenkins = parse_expectation_xml(
+        '''<buildSteps>
+          <hudson.plugins.parameterizedtrigger.TriggerBuilder plugin="parameterized-trigger@2.31">
+            <configs>
+              <hudson.plugins.parameterizedtrigger.BlockableBuildTriggerConfig>
+                <configs class="empty-list" />
+                <projects>ReleaseBuild</projects>
+                <condition>ALWAYS</condition>
+                <triggerWithNoParameters>false</triggerWithNoParameters>
+                <block>
+                  <buildStepFailureThreshold>
+                    <name>FAILURE</name>
+                    <ordinal>2</ordinal>
+                    <color>RED</color>
+                    <completeBuild>true</completeBuild>
+                  </buildStepFailureThreshold>
+                  <unstableThreshold>
+                    <name>UNSTABLE</name>
+                    <ordinal>1</ordinal>
+                    <color>YELLOW</color>
+                    <completeBuild>true</completeBuild>
+                  </unstableThreshold>
+                  <failureThreshold>
+                    <name>FAILURE</name>
+                    <ordinal>2</ordinal>
+                    <color>RED</color>
+                    <completeBuild>true</completeBuild>
+                  </failureThreshold>
+                </block>
+                <buildAllNodesWithLabel>false</buildAllNodesWithLabel>
+              </hudson.plugins.parameterizedtrigger.BlockableBuildTriggerConfig>
+            </configs>
+          </hudson.plugins.parameterizedtrigger.TriggerBuilder>
+        </buildSteps>''')
+
+      expect(@n_xml).to be_equivalent_to(xml_from_jenkins)
+    end
+
+    it 'generates no block conditions when set to false' do
+      params = { build_steps: { triggered_job:
+               { name: 'ReleaseBuild', block_condition: false } } }
+
+      JenkinsPipelineBuilder.registry.traverse_registry_path('job', params, @n_xml)
+
+      xml_from_jenkins = parse_expectation_xml(
+        '''
+        <buildSteps>
+          <hudson.plugins.parameterizedtrigger.TriggerBuilder plugin="parameterized-trigger@2.31">
+            <configs>
+              <hudson.plugins.parameterizedtrigger.BlockableBuildTriggerConfig>
+              <configs class="empty-list"/>
+              <projects>ReleaseBuild</projects>
+              <condition>ALWAYS</condition>
+              <triggerWithNoParameters>false</triggerWithNoParameters>
+              <buildAllNodesWithLabel>false</buildAllNodesWithLabel>
+            </hudson.plugins.parameterizedtrigger.BlockableBuildTriggerConfig>
+            </configs>
+          </hudson.plugins.parameterizedtrigger.TriggerBuilder>
+        </buildSteps>''')
+
+      expect(@n_xml).to be_equivalent_to(xml_from_jenkins)
+    end
+
+    it 'generates build state with current parameters' do
+      params = { build_steps: { triggered_job:
+               { name: 'ReleaseBuild', build_state: [:current] } } }
 
       JenkinsPipelineBuilder.registry.traverse_registry_path('job', params, @n_xml)
 
       expect(@n_xml
-        .at('//hudson.plugins.parameterizedtrigger.TriggerBuilder/configs/projects')
-        .text).to eq('ReleaseBuild')
+        .at_xpath("//buildSteps/
+        hudson.plugins.parameterizedtrigger.TriggerBuilder/
+        configs/
+        hudson.plugins.parameterizedtrigger.BlockableBuildTriggerConfig/
+        configs/
+        hudson.plugins.parameterizedtrigger.CurrentBuildParameters"))
+        .not_to equal(nil)
+    end
+
+    it 'generates build state with predefined parameters' do
+      params = { build_steps: { triggered_job:
+               { name: 'ReleaseBuild', build_state: [:predefined] } } }
+
+      JenkinsPipelineBuilder.registry.traverse_registry_path('job', params, @n_xml)
+
+      expect(@n_xml
+        .at_xpath("//buildSteps/
+        hudson.plugins.parameterizedtrigger.TriggerBuilder/
+        configs/
+        hudson.plugins.parameterizedtrigger.BlockableBuildTriggerConfig/
+        configs/
+        hudson.plugins.parameterizedtrigger.CurrentBuildParameters"))
+        .not_to equal(nil)
     end
   end
 end
-

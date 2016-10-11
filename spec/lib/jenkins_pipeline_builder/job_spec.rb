@@ -133,7 +133,7 @@ describe JenkinsPipelineBuilder::Job do
     end
 
     it 'fails on an unknown type' do
-      job = described_class.new job_type: 'unknonw', name: 'asdf'
+      job = described_class.new job_type: 'unknown', name: 'asdf'
 
       success, _payload = job.to_xml
       expect(success).to be false

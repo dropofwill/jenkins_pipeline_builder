@@ -24,3 +24,6 @@
         - '{{name}}-Acceptance' # from template (see dependencies section)
         - '{{name}}-Upgrade'
         - '{{name}}-Release'
+    promotions:
+        - '01. Stage Promotion'
+        - '02. Prod/SCA Promotion'

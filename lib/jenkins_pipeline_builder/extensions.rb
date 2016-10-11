@@ -61,7 +61,7 @@ module JenkinsPipelineBuilder
       errors.each do |error|
         JenkinsPipelineBuilder.logger.error error
       end
-      return false if errors.any?
+      raise ArgumentError, errors.join("\n") if errors.any?
 
       n_builders = n_xml.xpath(path).first
       n_builders.instance_exec(value, &before) if before

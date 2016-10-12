@@ -143,7 +143,7 @@ describe 'build_steps' do
 
     it 'generates build state with predefined parameters' do
       params = { build_steps: { triggered_job:
-               { name: 'ReleaseBuild', build_state: [:predefined] } } }
+               { name: 'ReleaseBuild', build_state: [ [ :predefined, {x: 1, "y" => 2} ] ] } } }
 
       JenkinsPipelineBuilder.registry.traverse_registry_path('job', params, @n_xml)
 
@@ -153,8 +153,47 @@ describe 'build_steps' do
         configs/
         hudson.plugins.parameterizedtrigger.BlockableBuildTriggerConfig/
         configs/
-        hudson.plugins.parameterizedtrigger.CurrentBuildParameters"))
-        .not_to equal(nil)
+        hudson.plugins.parameterizedtrigger.PredefinedBuildParameters/
+        properties").text)
+        .to eq("X=1 Y=2")
+    end
+
+    it 'generates build state with file parameters' do
+      params = { build_steps: { triggered_job:
+               { name: 'ReleaseBuild', build_state: [ [ :file, '/usr/local/params' ] ] } } }
+
+      JenkinsPipelineBuilder.registry.traverse_registry_path('job', params, @n_xml)
+
+      expect(@n_xml
+        .at_xpath("//buildSteps/
+        hudson.plugins.parameterizedtrigger.TriggerBuilder/
+        configs/
+        hudson.plugins.parameterizedtrigger.BlockableBuildTriggerConfig/
+        configs/
+        hudson.plugins.parameterizedtrigger.FileBuildParameters/
+        propertiesFile").text)
+        .to eq("/usr/local/params")
+    end
+  end
+
+  context 'keep_builds_forever' do
+
+    before :each do
+      allow(JenkinsPipelineBuilder.client).to receive(:plugin).and_return double(
+        list_installed: { 'promoted-builds' => '2.31' }
+      )
+    end
+
+    it 'generates the keep_builds_forever tag' do
+
+      params = { build_steps: { keep_builds_forever: true } }
+
+      JenkinsPipelineBuilder.registry.traverse_registry_path('job', params, @n_xml)
+
+      expect(@n_xml
+        .at_xpath("//buildSteps/
+        hudson.plugins.promoted__builds.KeepBuildForeverAction"))
+        .to_not eq(nil)
     end
   end
 end

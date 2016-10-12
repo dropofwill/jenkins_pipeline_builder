@@ -40,12 +40,12 @@ build_step do
 
                 when /predefined/i, :predefined
                   send('hudson.plugins.parameterizedtrigger.PredefinedBuildParameters') do
-                    properties param_val
+                    properties param_val.map { |k, v| "#{k.upcase}=#{v}" }.join(" ")
                   end
 
                 when /file/i, :file
                   send('hudson.plugins.parameterizedtrigger.FileBuildParameters') do
-                    propertiesFile param_val[:path]
+                    propertiesFile param_val
                     failTriggerOnMissing false
                     useMatrixChild false
                     onlyExactRuns false
@@ -86,13 +86,8 @@ end
 build_step do
   name :keep_builds_forever
   plugin_id 'promoted-builds'
-  parameters [
-    :value,
-  ]
 
   xml do |params|
-    if params.value
-      send('hudson.plugins.promoted__builds.KeepBuildForeverAction')
-    end
+    send('hudson.plugins.promoted__builds.KeepBuildForeverAction')
   end
 end

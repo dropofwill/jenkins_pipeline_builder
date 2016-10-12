@@ -56,7 +56,7 @@ describe 'conditions' do
       )
     end
 
-    it 'generates manual configuration given parameter' do
+    it 'generates manual given parameter' do
       params = { conditions: [ { manual: { users: 'unauthorized' } } ] }
       
       JenkinsPipelineBuilder.registry.traverse_registry_path('job', params, @n_xml)
@@ -64,7 +64,7 @@ describe 'conditions' do
       expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.ManualCondition/users').text).to eq('unauthorized')
     end
 
-    it 'generates manual configuration defaults' do
+    it 'generates manual defaults' do
       params = { conditions: [ { manual: { } } ] }
       
       JenkinsPipelineBuilder.registry.traverse_registry_path('job', params, @n_xml)
@@ -80,20 +80,20 @@ describe 'conditions' do
       )
     end
 
-    it 'generates a self promotion configuration given parameters' do
-      params = { conditions: [ { self_promotion: { even_if_unstable: true } } ] }
+    it 'generates a self promotion given parameters' do
+      params = { conditions: [ { self_promotion: { even_if_unstable: false } } ] }
       
       JenkinsPipelineBuilder.registry.traverse_registry_path('job', params, @n_xml)
 
-      expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.SelfPromotionCondition/even_if_unstable').text).to eq('true')
+      expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.SelfPromotionCondition/even_if_unstable').text).to eq('false')
     end
 
-    it 'generates a self promotion configuration defaults' do
+    it 'generates a self promotion defaults' do
       params = { conditions: [ { self_promotion: { } } ] }
       
       JenkinsPipelineBuilder.registry.traverse_registry_path('job', params, @n_xml)
       
-      expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.SelfPromotionCondition/even_if_unstable').text).to eq('false')
+      expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.SelfPromotionCondition/even_if_unstable').text).to eq('true')
     end
   end
 
@@ -104,24 +104,24 @@ describe 'conditions' do
       )
     end
 
-    it 'generates a parameterized self promotion configuration given parameters' do
-      params = { conditions: [ { parameterized_self_promotion: { parameter_name: 'SOME_ENV_CHAR', parameter_value: true, even_if_unstable: true } } ] }
+    it 'generates a parameterized self promotion given parameters' do
+      params = { conditions: [ { parameterized_self_promotion: { parameter_name: 'SOME_ENV_CHAR', parameter_value: false, even_if_unstable: false } } ] }
       
       JenkinsPipelineBuilder.registry.traverse_registry_path('job', params, @n_xml)
 
       expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.ParameterizedSelfPromotionCondition/parameter_name').text).to eq('SOME_ENV_CHAR')
-      expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.ParameterizedSelfPromotionCondition/parameter_value').text).to eq('true')
-      expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.ParameterizedSelfPromotionCondition/even_if_unstable').text).to eq('true')
+      expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.ParameterizedSelfPromotionCondition/parameter_value').text).to eq('false')
+      expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.ParameterizedSelfPromotionCondition/even_if_unstable').text).to eq('false')
     end
 
-    it 'generates a parameterized self promotion configuration defaults' do
+    it 'generates a parameterized self promotion defaults' do
       params = { conditions: [ { parameterized_self_promotion: { } } ] }
       
       JenkinsPipelineBuilder.registry.traverse_registry_path('job', params, @n_xml)
 
       expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.ParameterizedSelfPromotionCondition/parameter_name').text).to eq('')
-      expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.ParameterizedSelfPromotionCondition/parameter_value').text).to eq('false')
-      expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.ParameterizedSelfPromotionCondition/even_if_unstable').text).to eq('false')
+      expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.ParameterizedSelfPromotionCondition/parameter_value').text).to eq('true')
+      expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.ParameterizedSelfPromotionCondition/even_if_unstable').text).to eq('true')
     end
   end
 
@@ -141,13 +141,13 @@ describe 'conditions' do
       expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.DownstreamPassCondition/even_if_unstable').text).to eq('true')
     end
 
-    it 'generates a downstream pass configuration defaults' do
+    it 'generates a downstream pass defaults' do
       params = { conditions: [ downstream_pass: { } ] }
 
       JenkinsPipelineBuilder.registry.traverse_registry_path('job', params, @n_xml)
 
       expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.DownstreamPassCondition/jobs').text).to eq('{{Example}}-Commit')
-      expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.DownstreamPassCondition/even_if_unstable').text).to eq('false')
+      expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.DownstreamPassCondition/even_if_unstable').text).to eq('true')
     end
   end
 
@@ -158,7 +158,7 @@ describe 'conditions' do
       )
     end
 
-    it 'generates a upstream promotion configuration parameters' do
+    it 'generates a upstream promotion parameters' do
       params = { conditions: [ upstream_promotion: { promotion_name: 'Never-Promotes' } ] }
       
       JenkinsPipelineBuilder.registry.traverse_registry_path('job', params, @n_xml)
@@ -166,7 +166,7 @@ describe 'conditions' do
       expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.UpstreamPromotionCondition/promotion_name').text).to eq('Never-Promotes')
     end
 
-    it 'generates a upstream promotion configuration defaults' do
+    it 'generates a upstream promotion defaults' do
       params = { conditions: [ upstream_promotion: { } ] }
 
       JenkinsPipelineBuilder.registry.traverse_registry_path('job', params, @n_xml)
@@ -180,12 +180,12 @@ describe 'conditions' do
       JenkinsPipelineBuilder.registry.traverse_registry_path('job', params, @n_xml)
 
       expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.ManualCondition/users').text).to eq('')
-      expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.SelfPromotionCondition/even_if_unstable').text).to eq('false')
+      expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.SelfPromotionCondition/even_if_unstable').text).to eq('true')
       expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.ParameterizedSelfPromotionCondition/parameter_name').text).to eq('')
-      expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.ParameterizedSelfPromotionCondition/parameter_value').text).to eq('false')
-      expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.ParameterizedSelfPromotionCondition/even_if_unstable').text).to eq('false')
+      expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.ParameterizedSelfPromotionCondition/parameter_value').text).to eq('true')
+      expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.ParameterizedSelfPromotionCondition/even_if_unstable').text).to eq('true')
       expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.DownstreamPassCondition/jobs').text).to eq('{{Example}}-Commit')
-      expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.DownstreamPassCondition/even_if_unstable').text).to eq('false')
+      expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.DownstreamPassCondition/even_if_unstable').text).to eq('true')
       expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.UpstreamPromotionCondition/promotion_name').text).to eq('01. Staging Promotion')
     end
   end

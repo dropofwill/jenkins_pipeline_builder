@@ -21,7 +21,10 @@ condition do
 
   xml do |params|
     send('hudson.plugins.promoted__builds.conditions.SelfPromotionCondition') do
-      even_if_unstable params[:even_if_unstable] || false
+      if params[:even_if_unstable].nil?
+        even_if_unstable true
+      end
+      even_if_unstable params[:even_if_unstable]
     end
   end
 end
@@ -38,8 +41,14 @@ condition do
   xml do |params|
     send('hudson.plugins.promoted__builds.conditions.ParameterizedSelfPromotionCondition') do
       parameter_name params[:parameter_name]
-      parameter_value params[:parameter_value] || false
-      even_if_unstable params[:even_if_unstable] || false
+      if params[:parameter_value].nil?
+        parameter_value true
+      end
+      if params[:even_if_unstable].nil?
+        even_if_unstable true
+      end
+      parameter_value params[:parameter_value]
+      even_if_unstable params[:even_if_unstable]
     end
   end
 end
@@ -55,7 +64,10 @@ condition do
   xml do |params|
     send('hudson.plugins.promoted__builds.conditions.DownstreamPassCondition') do
       jobs params[:jobs] || '{{Example}}-Commit'
-      even_if_unstable params[:even_if_unstable] || false
+      if params[:even_if_unstable].nil?
+        even_if_unstable true
+      end
+      even_if_unstable params[:even_if_unstable]
     end
   end
 end
@@ -69,7 +81,10 @@ condition do
 
   xml do |params|
     send('hudson.plugins.promoted__builds.conditions.UpstreamPromotionCondition') do
-      promotion_name params[:promotion_name] || '01. Staging Promotion'
+      if params[:promotion_name].nil?
+        promotion_name '01. Staging Promotion'
+      end
+      promotion_name params[:promotion_name]
     end
   end
 end

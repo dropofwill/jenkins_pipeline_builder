@@ -1,5 +1,4 @@
 require File.expand_path('../../spec_helper', __FILE__)
-require 'pry'
 
 describe 'conditions' do
   after :each do
@@ -70,7 +69,7 @@ describe 'conditions' do
       
       JenkinsPipelineBuilder.registry.traverse_registry_path('job', params, @n_xml)
       
-      expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.ManualCondition/users').text).to eq('authorized')
+      expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.ManualCondition/users').text).to eq('')
     end
   end
 
@@ -180,7 +179,7 @@ describe 'conditions' do
 
       JenkinsPipelineBuilder.registry.traverse_registry_path('job', params, @n_xml)
 
-      expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.ManualCondition/users').text).to eq('authorized')
+      expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.ManualCondition/users').text).to eq('')
       expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.SelfPromotionCondition/even_if_unstable').text).to eq('false')
       expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.ParameterizedSelfPromotionCondition/parameter_name').text).to eq('')
       expect(@n_xml.at('//hudson.plugins.promoted__builds.conditions.ParameterizedSelfPromotionCondition/parameter_value').text).to eq('false')

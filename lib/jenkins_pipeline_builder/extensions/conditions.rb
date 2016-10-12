@@ -7,7 +7,7 @@ condition do
 
   xml do |params|
     send('hudson.plugins.promoted__builds.conditions.ManualCondition') do
-      users params[:users] || 'authorized'
+      users params[:users]
     end
   end
 end

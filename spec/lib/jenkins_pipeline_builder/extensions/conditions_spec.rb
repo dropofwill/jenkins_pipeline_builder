@@ -53,7 +53,7 @@ describe 'conditions' do
   context 'type: manual' do
     before :each do
       allow(JenkinsPipelineBuilder.client).to receive(:plugin).and_return double(
-        list_installed: { 'promoted_builds' => '2.31' }
+        list_installed: { 'promoted-builds' => '2.31' }
       )
     end
 
@@ -77,7 +77,7 @@ describe 'conditions' do
   context 'type: self_promotion' do
     before :each do
       allow(JenkinsPipelineBuilder.client).to receive(:plugin).and_return double(
-        list_installed: { 'promoted_builds' => '2.31' }
+        list_installed: { 'promoted-builds' => '2.31' }
       )
     end
 
@@ -101,7 +101,7 @@ describe 'conditions' do
   context 'type: parameterized_self_promotion' do
     before :each do
       allow(JenkinsPipelineBuilder.client).to receive(:plugin).and_return double(
-        list_installed: { 'promoted_builds' => '2.31' }
+        list_installed: { 'promoted-builds' => '2.31' }
       )
     end
 
@@ -129,7 +129,7 @@ describe 'conditions' do
   context 'type: downstream_pass' do
     before :each do
       allow(JenkinsPipelineBuilder.client).to receive(:plugin).and_return double(
-        list_installed: { 'promoted_builds' => '2.31' }
+        list_installed: { 'promoted-builds' => '2.31' }
       )
     end
 
@@ -155,7 +155,7 @@ describe 'conditions' do
   context 'type: upstream_promotion' do
     before :each do
       allow(JenkinsPipelineBuilder.client).to receive(:plugin).and_return double(
-        list_installed: { 'promoted_builds' => '2.31' }
+        list_installed: { 'promoted-builds' => '2.31' }
       )
     end
 

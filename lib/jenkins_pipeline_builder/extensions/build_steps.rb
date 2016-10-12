@@ -21,16 +21,14 @@ build_step do
     # [ :current, _ ],
     # [ :predefined, {val: x, val2: y} ],
     # [ :file, 'filpath' ] ]
-    :build_state,
+    :build_state
   ]
 
   xml do |state|
     send('hudson.plugins.parameterizedtrigger.TriggerBuilder',
-      'plugin' => 'parameterized-trigger@2.31') do
-
+         'plugin' => 'parameterized-trigger@2.31') do
       configs do
         send('hudson.plugins.parameterizedtrigger.BlockableBuildTriggerConfig') do
-
           if state[:build_state].present? && state[:build_state].respond_to?(:each)
             configs do
               state[:build_state].each do |param_key, param_val|
@@ -40,7 +38,7 @@ build_step do
 
                 when /predefined/i, :predefined
                   send('hudson.plugins.parameterizedtrigger.PredefinedBuildParameters') do
-                    properties param_val.map { |k, v| "#{k.upcase}=#{v}" }.join(" ")
+                    properties param_val.map { |k, v| "#{k.upcase}=#{v}" }.join(' ')
                   end
 
                 when /file/i, :file
@@ -64,17 +62,17 @@ build_step do
           block do
             buildStepFailureThreshold do
               state.generate_for_threshold(self,
-                state.resolve_block_condition(:build_step_failure_threshold) || :failure)
+                                           state.resolve_block_condition(:build_step_failure_threshold) || :failure)
             end
             unstableThreshold do
               state.generate_for_threshold(self,
-                state.resolve_block_condition(:unstable_threshold) || :unstable)
+                                           state.resolve_block_condition(:unstable_threshold) || :unstable)
             end
             failureThreshold do
               state.generate_for_threshold(self,
-                state.resolve_block_condition(:failure_threshold) || :failure)
+                                           state.resolve_block_condition(:failure_threshold) || :failure)
             end
-          end if state.has_block_condition?
+          end if state.block_condition?
 
           buildAllNodesWithLabel false
         end
@@ -87,7 +85,7 @@ build_step do
   name :keep_builds_forever
   plugin_id 'promoted-builds'
 
-  xml do |params|
+  xml do
     send('hudson.plugins.promoted__builds.KeepBuildForeverAction')
   end
 end

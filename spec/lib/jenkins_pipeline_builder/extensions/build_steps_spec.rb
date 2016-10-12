@@ -63,11 +63,11 @@ describe 'build_steps' do
       JenkinsPipelineBuilder.registry.traverse_registry_path('job', params, @n_xml)
 
       xml_from_jenkins = parse_expectation_xml(
-        '''<buildSteps>
-          <hudson.plugins.parameterizedtrigger.TriggerBuilder plugin="parameterized-trigger@2.31">
+        "<buildSteps>
+          <hudson.plugins.parameterizedtrigger.TriggerBuilder plugin='parameterized-trigger@2.31'>
             <configs>
               <hudson.plugins.parameterizedtrigger.BlockableBuildTriggerConfig>
-                <configs class="empty-list" />
+                <configs class='empty-list' />
                 <projects>ReleaseBuild</projects>
                 <condition>ALWAYS</condition>
                 <triggerWithNoParameters>false</triggerWithNoParameters>
@@ -95,7 +95,8 @@ describe 'build_steps' do
               </hudson.plugins.parameterizedtrigger.BlockableBuildTriggerConfig>
             </configs>
           </hudson.plugins.parameterizedtrigger.TriggerBuilder>
-        </buildSteps>''')
+        </buildSteps>"
+      )
 
       expect(@n_xml).to be_equivalent_to(xml_from_jenkins)
     end
@@ -107,12 +108,11 @@ describe 'build_steps' do
       JenkinsPipelineBuilder.registry.traverse_registry_path('job', params, @n_xml)
 
       xml_from_jenkins = parse_expectation_xml(
-        '''
-        <buildSteps>
-          <hudson.plugins.parameterizedtrigger.TriggerBuilder plugin="parameterized-trigger@2.31">
+        "<buildSteps>
+          <hudson.plugins.parameterizedtrigger.TriggerBuilder plugin='parameterized-trigger@2.31'>
             <configs>
               <hudson.plugins.parameterizedtrigger.BlockableBuildTriggerConfig>
-              <configs class="empty-list"/>
+              <configs class='empty-list'/>
               <projects>ReleaseBuild</projects>
               <condition>ALWAYS</condition>
               <triggerWithNoParameters>false</triggerWithNoParameters>
@@ -120,7 +120,8 @@ describe 'build_steps' do
             </hudson.plugins.parameterizedtrigger.BlockableBuildTriggerConfig>
             </configs>
           </hudson.plugins.parameterizedtrigger.TriggerBuilder>
-        </buildSteps>''')
+        </buildSteps>"
+      )
 
       expect(@n_xml).to be_equivalent_to(xml_from_jenkins)
     end
@@ -143,7 +144,7 @@ describe 'build_steps' do
 
     it 'generates build state with predefined parameters' do
       params = { build_steps: { triggered_job:
-               { name: 'ReleaseBuild', build_state: [ [ :predefined, {x: 1, "y" => 2} ] ] } } }
+               { name: 'ReleaseBuild', build_state: [[:predefined, { x: 1, 'y' => 2 }]] } } }
 
       JenkinsPipelineBuilder.registry.traverse_registry_path('job', params, @n_xml)
 
@@ -155,12 +156,12 @@ describe 'build_steps' do
         configs/
         hudson.plugins.parameterizedtrigger.PredefinedBuildParameters/
         properties").text)
-        .to eq("X=1 Y=2")
+        .to eq('X=1 Y=2')
     end
 
     it 'generates build state with file parameters' do
       params = { build_steps: { triggered_job:
-               { name: 'ReleaseBuild', build_state: [ [ :file, '/usr/local/params' ] ] } } }
+               { name: 'ReleaseBuild', build_state: [[:file, '/usr/local/params']] } } }
 
       JenkinsPipelineBuilder.registry.traverse_registry_path('job', params, @n_xml)
 
@@ -172,12 +173,11 @@ describe 'build_steps' do
         configs/
         hudson.plugins.parameterizedtrigger.FileBuildParameters/
         propertiesFile").text)
-        .to eq("/usr/local/params")
+        .to eq('/usr/local/params')
     end
   end
 
   context 'keep_builds_forever' do
-
     before :each do
       allow(JenkinsPipelineBuilder.client).to receive(:plugin).and_return double(
         list_installed: { 'promoted-builds' => '2.31' }
@@ -185,7 +185,6 @@ describe 'build_steps' do
     end
 
     it 'generates the keep_builds_forever tag' do
-
       params = { build_steps: { keep_builds_forever: true } }
 
       JenkinsPipelineBuilder.registry.traverse_registry_path('job', params, @n_xml)

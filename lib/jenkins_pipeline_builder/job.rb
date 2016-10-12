@@ -25,7 +25,7 @@ module JenkinsPipelineBuilder
     end
 
     # must be called after updating the job's config
-    def create_promotion_process process_name, config
+    def create_promotion_process(process_name, config)
       # TODO
       JenkinsPipelineBuilder.client.job.init_promotion_process(process_name, config)
     end

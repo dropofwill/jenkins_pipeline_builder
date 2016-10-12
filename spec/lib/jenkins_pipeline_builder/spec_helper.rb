@@ -39,7 +39,5 @@ RSpec::Matchers.define :have_registered_versions do |versions|
 end
 
 def parse_expectation_xml(xml_string)
-  Nokogiri::XML.parse(xml_string) do |config|
-    config.noblanks
-  end
+  Nokogiri::XML.parse(xml_string, &:noblanks)
 end

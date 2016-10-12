@@ -7,7 +7,7 @@ condition do
 
   xml do |params|
     send('hudson.plugins.promoted__builds.conditions.ManualCondition') do
-      users params[:users]
+      users params[:users] || 'authorized'
     end
   end
 end
@@ -21,7 +21,7 @@ condition do
 
   xml do |params|
     send('hudson.plugins.promoted__builds.conditions.SelfPromotionCondition') do
-      even_if_unstable params[:even_if_unstable]      
+      even_if_unstable params[:even_if_unstable] || false
     end
   end
 end
@@ -38,8 +38,8 @@ condition do
   xml do |params|
     send('hudson.plugins.promoted__builds.conditions.ParameterizedSelfPromotionCondition') do
       parameter_name params[:parameter_name]
-      parameter_value params[:parameter_value]
-      even_if_unstable params[:even_if_unstable]
+      parameter_value params[:parameter_value] || false
+      even_if_unstable params[:even_if_unstable] || false
     end
   end
 end
@@ -54,8 +54,8 @@ condition do
 
   xml do |params|
     send('hudson.plugins.promoted__builds.conditions.DownstreamPassCondition') do
-      jobs params[:jobs]
-      even_if_unstable params[:even_if_unstable]
+      jobs params[:jobs] || '{{Example}}-Commit'
+      even_if_unstable params[:even_if_unstable] || false
     end
   end
 end
@@ -69,13 +69,7 @@ condition do
 
   xml do |params|
     send('hudson.plugins.promoted__builds.conditions.UpstreamPromotionCondition') do
-      promotion_name params[:promotion_name]
+      promotion_name params[:promotion_name] || '01. Staging Promotion'
     end
   end
 end
-
-
-
-
-
-

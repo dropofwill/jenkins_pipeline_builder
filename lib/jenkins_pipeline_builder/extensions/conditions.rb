@@ -1,6 +1,6 @@
 condition do
   name :manual
-  plugin_id 'promoted_builds'
+  plugin_id 'promoted-builds'
   parameters [
     :users
   ]
@@ -14,7 +14,7 @@ end
 
 condition do
   name :self_promotion
-  plugin_id 'promoted_builds'
+  plugin_id 'promoted-builds'
   parameters [
     :even_if_unstable
   ]
@@ -28,7 +28,7 @@ end
 
 condition do
   name :parameterized_self_promotion
-  plugin_id 'promoted_builds'
+  plugin_id 'promoted-builds'
   parameters [
     :parameter_name,
     :parameter_value,
@@ -46,7 +46,7 @@ end
 
 condition do
   name :downstream_pass
-  plugin_id 'promoted_builds'
+  plugin_id 'promoted-builds'
   parameters [
     :jobs,
     :even_if_unstable
@@ -62,7 +62,7 @@ end
 
 condition do
   name :upstream_promotion
-  plugin_id 'promoted_builds'
+  plugin_id 'promoted-builds'
   parameters [
     :promotion_name
   ]

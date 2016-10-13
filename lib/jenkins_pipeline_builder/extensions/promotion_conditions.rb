@@ -1,4 +1,4 @@
-condition do
+promotion_condition do
   name :manual
   plugin_id 'promoted-builds'
   parameters [
@@ -12,7 +12,7 @@ condition do
   end
 end
 
-condition do
+promotion_condition do
   name :self_promotion
   plugin_id 'promoted-builds'
   parameters [
@@ -27,7 +27,7 @@ condition do
   end
 end
 
-condition do
+promotion_condition do
   name :parameterized_self_promotion
   plugin_id 'promoted-builds'
   parameters [
@@ -47,7 +47,7 @@ condition do
   end
 end
 
-condition do
+promotion_condition do
   name :downstream_pass
   plugin_id 'promoted-builds'
   parameters [
@@ -64,7 +64,7 @@ condition do
   end
 end
 
-condition do
+promotion_condition do
   name :upstream_promotion
   plugin_id 'promoted-builds'
   parameters [

@@ -53,7 +53,7 @@ module JenkinsPipelineBuilder
         wrappers: '//buildWrappers',
         triggers: '//triggers',
         build_steps: '//buildSteps',
-        conditions: '//conditions'
+        promotion_conditions: '//conditions'
       }
     end
 

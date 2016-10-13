@@ -16,8 +16,8 @@ describe 'conditions' do
   end
 
   before :each do
-    builder = Nokogiri::XML::Builder.new { |xml| xml.conditions }
-    @n_xml = builder.doc
+    condition = Nokogiri::XML::Builder.new { |xml| xml.conditions }
+    @n_xml = condition.doc
   end
 
   after :each do |example|
@@ -29,22 +29,22 @@ describe 'conditions' do
 
   context 'generic' do
     it 'can register a condition' do
-      result = condition do
+      result = promotion_condition do
         name :test_generic
         plugin_id :foo
         xml do
           foo :bar
         end
       end
-      JenkinsPipelineBuilder.registry.registry[:job][:conditions].delete :test_generic
+      JenkinsPipelineBuilder.registry.registry[:job][:promotion_conditions].delete :test_generic
       expect(result).to be true
     end
 
     it 'fails to register an invalid condition' do
-      result = condition do
+      result = promotion_condition do
         name :test_generic
       end
-      JenkinsPipelineBuilder.registry.registry[:job][:conditions].delete :test_generic
+      JenkinsPipelineBuilder.registry.registry[:job][:promotion_conditions].delete :test_generic
       expect(result).to be false
     end
   end
@@ -57,7 +57,7 @@ describe 'conditions' do
     end
 
     it 'generates manual given parameter' do
-      params = { conditions:
+      params = { promotion_conditions:
               [{ manual: { users: 'unauthorized' } }] }
 
       JenkinsPipelineBuilder.registry.traverse_registry_path('job', params, @n_xml)
@@ -69,7 +69,7 @@ describe 'conditions' do
     end
 
     it 'generates manual defaults' do
-      params = { conditions:
+      params = { promotion_conditions:
               [{ manual: {} }] }
 
       JenkinsPipelineBuilder.registry.traverse_registry_path('job', params, @n_xml)
@@ -89,7 +89,7 @@ describe 'conditions' do
     end
 
     it 'generates a self promotion given parameters' do
-      params = { conditions:
+      params = { promotion_conditions:
               [{ self_promotion:
                { even_if_unstable: false } }] }
 
@@ -102,7 +102,7 @@ describe 'conditions' do
     end
 
     it 'generates a self promotion defaults' do
-      params = { conditions: [{ self_promotion: {} }] }
+      params = { promotion_conditions: [{ self_promotion: {} }] }
 
       JenkinsPipelineBuilder.registry.traverse_registry_path('job', params, @n_xml)
 
@@ -121,7 +121,7 @@ describe 'conditions' do
     end
 
     it 'generates a parameterized self promotion given parameters' do
-      params = { conditions:
+      params = { promotion_conditions:
               [{ parameterized_self_promotion:
                { parameter_name: 'SOME_ENV_CHAR', parameter_value: false, even_if_unstable: false } }] }
 
@@ -142,7 +142,7 @@ describe 'conditions' do
     end
 
     it 'generates a parameterized self promotion defaults' do
-      params = { conditions:
+      params = { promotion_conditions:
               [{ parameterized_self_promotion: {} }] }
 
       JenkinsPipelineBuilder.registry.traverse_registry_path('job', params, @n_xml)
@@ -169,7 +169,7 @@ describe 'conditions' do
     end
 
     it 'generates a downstream pass configuration given parameters' do
-      params = { conditions:
+      params = { promotion_conditions:
               [downstream_pass:
                { jobs: 'Worst-Commit-Ever', even_if_unstable: true }] }
 
@@ -186,7 +186,7 @@ describe 'conditions' do
     end
 
     it 'generates a downstream pass defaults' do
-      params = { conditions:
+      params = { promotion_conditions:
               [downstream_pass: {}] }
 
       JenkinsPipelineBuilder.registry.traverse_registry_path('job', params, @n_xml)
@@ -210,7 +210,7 @@ describe 'conditions' do
     end
 
     it 'generates a upstream promotion parameters' do
-      params = { conditions:
+      params = { promotion_conditions:
               [upstream_promotion:
                { promotion_name: 'Never-Promotes' }] }
 
@@ -223,8 +223,8 @@ describe 'conditions' do
     end
 
     it 'generates a upstream promotion defaults' do
-      params = { conditions:
-        [upstream_promotion: {}] }
+      params = { promotion_conditions:
+              [upstream_promotion: {}] }
 
       JenkinsPipelineBuilder.registry.traverse_registry_path('job', params, @n_xml)
 
@@ -235,7 +235,7 @@ describe 'conditions' do
     end
 
     it 'generates all condition defaults given no parameters' do
-      params = { conditions:
+      params = { promotion_conditions:
               [{ manual: {} },
                { self_promotion: {} },
                { parameterized_self_promotion: {} },
